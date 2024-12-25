@@ -14,15 +14,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.sql.DataSource;
 
-@AllArgsConstructor
 @Configuration
 @Import(DataSourceConfig.class)
 public class BatchConfig extends DefaultBatchConfiguration {
 
     @Bean
-    public Job getDataExportJob(JobRepository jobRepository, Step exportStep) {
+    public Job dataExportJob(JobRepository jobRepository, Step exportStep) {
         return new JobBuilder("Data Export", jobRepository)
                 .start(exportStep).build();
     }
