@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: admin
+    password: admin
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console.enabled: true
+application:
+  datasource:
+    url: jdbc:postgresql:localhost:5432/test
+    username: root
+    password: root
+    driverClassName: org.postgresql.Driver
