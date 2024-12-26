@@ -8,9 +8,12 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
   h2:
     console.enabled: true
+  initialization-script:
+    dropSchema: org/springframework/batch/core/schema-drop-h2.sql
+    createSchema: org/springframework/batch/core/schema-h2.sql
 application:
   datasource:
-    jdbc-url: jdbc:postgresql:localhost:5432/test
-    username: root
-    password: root
+    jdbc-url: jdbc:postgresql://localhost:5432/test
+    username: postgres
+    password: postgres123
     driverClassName: org.postgresql.Driver

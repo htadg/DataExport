@@ -5,19 +5,12 @@ services:
     container_name: postgres_container
     image: postgres:16
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-root}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
-      PGDATA: /var/lib/postgresql/data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: test
     volumes:
-      - ./data:/var/lib/postgresql/data
-      - ./logs:/var/log/postgresql
+      - ./asset/db-init.sql:/docker-entrypoint-initdb.d/db-init.sql
     ports:
       - "5432:5432"
     restart: unless-stopped
-    # command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf", "-c", "hba_file=/etc/postgresql/pg_hba.conf",]
     command: "postgres"
-volumes:
-  data:
-    driver: local
-  logs:
-    driver: local
