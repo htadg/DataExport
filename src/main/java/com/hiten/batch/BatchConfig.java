@@ -14,7 +14,6 @@ import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
-import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -34,25 +33,14 @@ import java.util.Map;
 public class BatchConfig extends DefaultBatchConfiguration {
 
     @Bean
-    public Job dataExportJob(JobRepository jobRepository, Step exportStep, Step exportStep1) {
+    public Job dataExportJob(JobRepository jobRepository, Step exportStep) {
         return new JobBuilder("Data Export", jobRepository)
                 .start(exportStep)
-                .next(exportStep1)
                 .build();
     }
 
     @Bean
-    public Step exportStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder("Hello World", jobRepository)
-                .tasklet((contribution, chunkContext) -> {
-                    System.out.println("Hello World");
-                    return RepeatStatus.FINISHED;
-                }, transactionManager)
-                .build();
-    }
-
-    @Bean
-    public Step exportStep1(JobRepository jobRepository, PlatformTransactionManager transactionManager, JdbcCursorItemReader<Map<String, String>> itemReader, FlatFileItemWriter<Map<String, String>> itemWriter) {
+    public Step exportStep(JobRepository jobRepository, PlatformTransactionManager transactionManager, JdbcCursorItemReader<Map<String, String>> itemReader, FlatFileItemWriter<Map<String, String>> itemWriter) {
         return new StepBuilder("Export from DB", jobRepository)
                 .<Map<String, String>, Map<String, String>>chunk(10, transactionManager)
                 .reader(itemReader)
