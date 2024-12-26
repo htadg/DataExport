@@ -6,6 +6,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
@@ -17,16 +18,16 @@ import javax.sql.DataSource;
 @Configuration
 public class DataSourceConfig {
 
-    @Value("${classpath:org/springframework/batch/core/schema-drop-h2.sql}")
-    private Resource dropSchemaSql;
+    @Value("${spring.initialization-script.dropSchema}")
+    private String dropSchema;
 
-    @Value("classpath:org/springframework/batch/core/schema-h2.sql")
-    private Resource createSchemaSql;
+    @Value("${spring.initialization-script.createSchema}")
+    private String createSchema;
 
     /**
      * Primary datasource for the Batch application.
      * Uses in-memory h2 database to store batch job details
-     * @return DataSource
+     * @return {@link DataSource}
      */
     @Bean
     @Primary
@@ -35,6 +36,13 @@ public class DataSourceConfig {
         return DataSourceBuilder.create().build();
     }
 
+    /**
+     * Returns a {@link DataSourceInitializer} that is initialized with the primary data source and a
+     * {@link DatabasePopulator} that will execute the schema DDL scripts.
+     *
+     * @param dataSource the primary data source to initialize
+     * @return a {@link DataSourceInitializer}
+     */
     @Bean
     public DataSourceInitializer dataSourceInitializer(DataSource dataSource) {
         final DataSourceInitializer initializer = new DataSourceInitializer();
@@ -43,8 +51,17 @@ public class DataSourceConfig {
         return initializer;
     }
 
+    /**
+     * A {@link DatabasePopulator} that will populate the database with schema DDL.
+     * It uses the spring.batch.initialization-script.dropSchema and
+     * spring.batch.initialization-script.createSchema properties to determine the
+     * scripts to execute.
+     * @return A DatabasePopulator
+     */
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        Resource dropSchemaSql = new ClassPathResource(dropSchema);
+        Resource createSchemaSql = new ClassPathResource(createSchema);
         populator.addScript(dropSchemaSql);
         populator.addScript(createSchemaSql);
         return populator;
