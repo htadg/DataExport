@@ -11,9 +11,3 @@ spring:
   initialization-script:
     dropSchema: org/springframework/batch/core/schema-drop-h2.sql
     createSchema: org/springframework/batch/core/schema-h2.sql
-application:
-  datasource:
-    jdbc-url: jdbc:postgresql://localhost:5432/test
-    username: postgres
-    password: postgres123
-    driverClassName: org.postgresql.Driver

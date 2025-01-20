@@ -37,8 +37,9 @@ public class MainController {
     public Map<String, JobParameter<?>> getJobParameters() {
         Map<String, JobParameter<?>> jobParameters = new HashMap<>();
         jobParameters.put("sql", new JobParameter<>("select * from cars", String.class, false));
-        jobParameters.put("outputFile", new JobParameter<>("output.csv", String.class, false));
+        jobParameters.put("outputFile", new JobParameter<>("/tmp/output.csv", String.class, false));
         jobParameters.put("outputHeaders", new JobParameter<>(List.of("brand", "model", "year"), List.class, false));
+        jobParameters.put("dataSourceName", new JobParameter<>("postgres_test", String.class, false));
         return jobParameters;
     }
 

@@ -1,5 +1,6 @@
 package com.hiten.config;
 
+import com.hiten.util.ApplicationDataSourceManager;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -72,10 +73,7 @@ public class DataSourceConfig {
         return new JdbcTransactionManager(dataSource);
     }
 
-    @Bean
-    @ConfigurationProperties(prefix="application.datasource")
-    public DataSource applicationDataSource() {
-        return DataSourceBuilder.create().build();
+    public static DataSource getDataSource(String dataSourceName) {
+        return ApplicationDataSourceManager.getDataSource(dataSourceName);
     }
-
 }
